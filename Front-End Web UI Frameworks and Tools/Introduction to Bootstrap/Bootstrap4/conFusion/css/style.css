@@ -11,7 +11,7 @@
 }
 
 .footer {
-    background-color: #336699;
+    background-color: #330066;
     margin: 0px auto;
     padding: 20px 0px 20px 0px;
     color: floralwhite;
@@ -20,8 +20,9 @@
 .jumbotron {
     padding: 70px 30px 70px 30px;
     margin: 0px auto;
-    background: #3399cc;
+    background: #330099;
     color: floralwhite;
+    border-radius: 0px;
 }
 
 .address {
@@ -30,6 +31,6 @@
     color:floralwhite;
 }
 
-a {
+a, a:hover {
     color: floralwhite;
 }
