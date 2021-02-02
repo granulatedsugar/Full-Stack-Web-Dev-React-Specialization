@@ -4,8 +4,6 @@
 
 ## Course 2: Front-End Web Development with React
 
-### Assignments
-
 ![node version](https://img.shields.io/badge/node-v6.11.0-green.svg)
 ![npm version](https://img.shields.io/badge/npm-v6.4.1-red.svg)
 ![react version](https://img.shields.io/badge/react-v16.5.2-blue.svg)
