@@ -1,0 +1,58 @@
+npm install -g grunt-cli
+npm install grunt --save-dev
+npm install grunt-sass --save-dev
+npm install time-grunt --save-dev
+npm install jit-grunt --save-dev
+npm install grunt-contrib-watch --save-dev
+npm install grunt-browser-sync --save-dev
+
+Create a Gruntfile.js file
+
+
+Use the following code: 
+
+
+'use strict';
+
+module.exports = function(grunt) {
+
+    require('time-grunt')(grunt);
+
+    require('jit-grunt')(grunt);
+    
+    grunt.initConfig({
+        sass: {
+            dist: {
+                files: {
+                    'css/styles.css': 'css/styles.scss'
+                }
+            }
+        },
+        watch: {
+            files: 'css/*.scss',
+            tasks: ['sass']
+        },
+        browserSync: {
+            dev: {
+                bsFiles: {
+                    src: [
+                        'css/*.css',
+                        '*.html',
+                        'js/*.js'
+                    ]
+                },
+                options: {
+                    watchTask: true,
+                    server: {
+                        baseDir: './'
+                    }
+                }
+            }
+        }
+
+    });
+
+    grunt.registerTask('css', ['sass']);
+    // NOTE:browserSync first
+    grunt.registerTask('default', ['browserSync', 'watch']);
+};
