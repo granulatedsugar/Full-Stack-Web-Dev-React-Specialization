@@ -2,7 +2,15 @@
 
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync'),
+    del = require('del'),
+    imagemin = require('gulp-imagemin'),
+    uglify = require('gulp-uglify'),
+    usemin = require('gulp-usemin'),
+    rev = require('gulp-rev'),
+    cleanCss = require('gulp-clean-css'),
+    flatmap = require('gulp-flatmap'),
+    htmlmin = require('gulp-htmlmin');
 
 gulp.task('sass', function() {
     return gulp.src('./css/*.scss')
@@ -10,8 +18,8 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('./css'));
 });
 
-gulp.task('sass:watch', function() {
-    gulp.watch('./css/*.scss', ['sass']); 
+gulp.task('sass:watch', function(){
+    gulp.watch('./css/*.scss', gulp.series('sass'));
 });
 
 gulp.task('browser-sync', function() {
@@ -30,6 +38,44 @@ gulp.task('browser-sync', function() {
 });
 
 // Default task
-gulp.task('default', gulp.series('browser-sync', function() {
-    gulp.start('sass:watch');
+gulp.task('default', gulp.parallel('browser-sync', 'sass:watch'));
+
+// Clean task
+gulp.task('clean', function() {
+    return del(['dist']);
+});
+
+// Copy fonts
+gulp.task('copyfonts', function() {
+    gulp.src('./node_modules/font-awesome/fonts/**/*.{ttf,woff,eof,svg}*')
+    .pipe(gulp.dest('./dist/fonts'));
+});
+
+// Imagemin
+gulp.task('imagemin', function() {
+    return gulp.src('img/*.{png,jpg,gif}')
+    .pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true}))
+    .pipe(gulp.dest('dist/img'));
+});
+
+gulp.task('usemin', function() {
+    return gulp.src('./*.html')
+    .pipe(flatmap(function(stream, file){
+        return stream
+          .pipe(usemin({
+              css: [ rev() ],
+              html: [ function() { return htmlmin({ collapseWhitespace: true })} ],
+              js: [ uglify(), rev() ],
+              inlinejs: [ uglify() ],
+              inlinecss: [ cleanCss(), 'concat' ]
+          }))
+      }))
+      .pipe(gulp.dest('dist/'));
+  });
+  
+
+// Build task (Clean first)
+gulp.task('build', gulp.series('clean', gulp.parallel('default', 'copyfonts', 'imagemin', 'usemin'), function() {
+    // default task code here 
+    gulp.start('copyfonts', 'imagemin', 'usemin');
 }));
