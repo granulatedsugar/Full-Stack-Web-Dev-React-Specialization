@@ -1,0 +1,11 @@
+Windows Global Installation:
+npm install -g create-react-app
+
+Mac Global Installation:
+sudo npm install -g create-react-app
+
+After install go to project folder:
+create-react-app confusion
+
+Go to confusion folder:
+npm start
