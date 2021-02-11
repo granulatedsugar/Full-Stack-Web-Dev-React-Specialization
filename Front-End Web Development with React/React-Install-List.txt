@@ -9,3 +9,18 @@ create-react-app confusion
 
 Go to confusion folder:
 npm start
+
+
+REACT Configuration:
+npm add bootstrap
+npm add reactstrap
+npm add react-popper
+
+Add to index.js
+. . .
+import 'bootstrap/dist/css/bootstrap.min.css';
+. . .
+Add tags use(Autofill possible) 
+. . .
+import { Navbar, NavbarBrand } from 'reactstrap';
+. . .
