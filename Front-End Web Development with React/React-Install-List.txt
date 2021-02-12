@@ -24,3 +24,23 @@ Add tags use(Autofill possible), notice from reactstrap
 . . .
 import { Navbar, NavbarBrand } from 'reactstrap';
 . . .
+
+
+Creating a New component structure
+. . .
+import React, { Component } from 'react';
+
+class Menu extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+
+        );
+    }
+}
+
+export default Menu;
