@@ -20,7 +20,7 @@ Add to index.js
 . . .
 import 'bootstrap/dist/css/bootstrap.min.css';
 . . .
-Add tags use(Autofill possible) 
+Add tags use(Autofill possible), notice from reactstrap 
 . . .
 import { Navbar, NavbarBrand } from 'reactstrap';
 . . .
