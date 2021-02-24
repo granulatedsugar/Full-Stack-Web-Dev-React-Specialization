@@ -15,6 +15,9 @@ REACT Configuration:
 npm add bootstrap
 npm add reactstrap
 npm add react-popper
+npm install bootstrap-social
+npm install font-awesome
+npm install 
 
 Add to index.js
 . . .
