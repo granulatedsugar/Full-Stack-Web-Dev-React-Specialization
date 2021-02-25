@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 
 function RenderCard({item}) {
+    // Card
     return(
         <Card>
             <CardImg src={item.image} alt={item.name} />
@@ -15,6 +16,7 @@ function RenderCard({item}) {
 }
 
 function Home(props) {
+    // Featured products
     return(
         <div className="container">
             <div className="row align-items-start">

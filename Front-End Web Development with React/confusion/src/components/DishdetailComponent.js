@@ -1,10 +1,10 @@
 import React from 'react';
-import { Badge, Card, CardBody, CardImg, CardText, CardTitle } from 'reactstrap';
+import { Badge, Card, CardBody, CardImg, CardText, CardTitle, Breadcrumb, BreadcrumbItem} from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
 //Render selected dish image/name/description
 function RenderDish({dish}) {
-    if (dish != null) {
         return(
             <div className="col-12 col-md-5 m-1">
                 <Card>
@@ -16,7 +16,6 @@ function RenderDish({dish}) {
                 </Card>
             </div>
         );
-    } else return <div/>;
 }
 
 
@@ -48,18 +47,29 @@ function RenderComment({comment}) {
 
 const DishDetail = (props) => {
 
-    const {dish} = props;
-
-    return dish?(
-        <div className="container">
-            <div className="row">
-                <RenderDish dish={dish} />
-                <RenderComment comment={dish.comments} />
+    if (props.dish != null)
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    <RenderDish dish={props.dish} />
+                    <RenderComment comment={props.comments} />
+                </div>
             </div>
-        </div>
-    ):(
-        <div></div>
-    )
+        );
+    else
+            return(
+            <div></div>
+        );
 }
 
 
