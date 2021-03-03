@@ -19,6 +19,10 @@ npm install bootstrap-social
 npm install font-awesome
 npm install 
 
+REDUX Installation and Configuration:
+npm install react-redux --save
+
+
 Add to index.js
 . . .
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -47,3 +51,4 @@ class Menu extends Component {
 }
 
 export default Menu;
+
