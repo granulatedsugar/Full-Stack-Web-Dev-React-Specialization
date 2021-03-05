@@ -17,7 +17,9 @@ npm add reactstrap
 npm add react-popper
 npm install bootstrap-social
 npm install font-awesome
-npm install 
+npm install redux
+npm install react-redux
+npm install react-redux-form
 
 Add to index.js
 . . .
