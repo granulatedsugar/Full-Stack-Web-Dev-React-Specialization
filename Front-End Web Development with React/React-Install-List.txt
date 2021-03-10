@@ -20,6 +20,8 @@ npm install font-awesome
 npm install redux
 npm install react-redux
 npm install react-redux-form
+npm install redux-thunk
+npm install redux-logger
 
 REDUX Installation and Configuration:
 npm install react-redux --save
