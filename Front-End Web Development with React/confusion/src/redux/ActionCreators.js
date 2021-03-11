@@ -2,17 +2,53 @@ import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
    type: ActionTypes.ADD_COMMENT,
    // Data that needs to be sent in
-   payload: {
-        dishId: dishId,
-        rating: rating,
-        author: author,
-        comment: comment
-   } 
+   payload: comment
 });
 
+
+// Post comment (Thunk function of a function)
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+   
+   const newComment =  {
+         dishId: dishId,
+         rating: rating,
+         author: author,
+         comment: comment
+   };
+   newComment.date = new Date().toISOString();
+
+   // POST message to the server
+   return fetch(baseUrl + 'comments',  {
+      method: 'POST',
+      body: JSON.stringify(newComment),
+      headers: {
+         'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
+   })
+      // Server  will process
+      .then(response => {
+         if (response.ok) {
+            return response;
+         }
+         else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+         }
+      },
+      error => {
+         throw error;
+      })
+      // Callback function
+      .then(response => response.json())
+      .then(response => dispatch(addComment(response)))
+      .catch(error => { console.log('Post comments', error.message);
+            alert('Your comment could not be posted\nError: ' + error.message);});
+};
 
 // Fetch Dishes
 // Thunk returns a function

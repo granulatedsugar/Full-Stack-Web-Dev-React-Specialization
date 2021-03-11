@@ -12,9 +12,9 @@ npm start
 
 
 REACT Configuration:
-npm add bootstrap
-npm add reactstrap
-npm add react-popper
+npm install bootstrap
+npm install reactstrap
+npm install react-popper
 npm install bootstrap-social
 npm install font-awesome
 npm install redux
@@ -22,6 +22,18 @@ npm install react-redux
 npm install react-redux-form
 npm install redux-thunk
 npm install redux-logger
+npm install react-transition-group
+npm install loadash
+npm install jest-cli
+npm install react-animation-components@3.0.0 --save --legacy-per-deeps
+npm install prop-types
+
+
+
+
+Demo Server:
+npm install json-server
+run:  json-server --watch db.json -p 3001 -d 2000 //Port 3001 | Delay 2 seconds
 
 REDUX Installation and Configuration:
 npm install react-redux --save

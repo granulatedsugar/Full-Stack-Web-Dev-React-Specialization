@@ -12,6 +12,7 @@ import { baseUrl } from "../shared/baseUrl";
 import { Loading } from "./LoadingComponent";
 import { Fade, Stagger } from "react-animation-components";
 
+
 function About(props) {
   function RenderLeader({ leader }) {
     return (
