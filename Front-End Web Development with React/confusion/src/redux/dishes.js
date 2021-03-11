@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 
-
 export const Dishes = (state = {
         isLoading:  true,
         errMess: null,
