@@ -4,6 +4,11 @@ import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 import { FadeTransform } from 'react-animation-components';
 
+
+//similar properties in the object for all three dish, promotion, leader
+//but leader have designation and abbr
+//function component will be used here only
+//extract item from props immediately available in {}
 function RenderCard({item, isLoading, errMess}) {
     if (isLoading) {
         return(
@@ -34,6 +39,8 @@ function RenderCard({item, isLoading, errMess}) {
         );
 }
 
+
+//the home receives the props.dish, props.promotion, props.leader will become available here
 function Home(props) {
     // Featured products
     return(
