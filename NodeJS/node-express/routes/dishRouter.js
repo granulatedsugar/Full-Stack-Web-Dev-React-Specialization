@@ -10,9 +10,10 @@ const express = require('express');
 const dishRouter = express.Router();
 
 // dishRouter.use(bodyParser.json()); // Deprecated
-// Using latest
+// Using latest json parser
 dishRouter.use(express.json());
 
+//---------- START ----------/
 // First route '/' because we need to mount
 // it in the index. By using this approach
 // we are declaring the endpoint at one 
@@ -20,7 +21,7 @@ dishRouter.use(express.json());
 // get, post, put, delete method.
 dishRouter.route('/')
 
-//---------- START REST ----------
+
 // first parameter is the endpoint, second is the callback function
 .all((req, res, next) => {
     // Insidee we are gonna handle the incoming request
@@ -60,40 +61,56 @@ dishRouter.route('/')
     res.end('Deleting all the dishes!');
 });
 
+//----- Setup to support /dishes/:dishID
 
-// //----- Setup to support /dishes/:dishID
+// Assignment 1 - Update dishRouter for dishId
+// No semi colon for dishRouter.route()
+dishRouter.route('/:dishId')
 
-// // Will receive next() / Get Request
-// app.get('/dishes/:dishId', (req, res, next) => {
-//     res.end('Will send details of the dish:'
-//         + req.params.dishId + ' to you!'); // dishID should match params in /dishes/:dishId
-// });
+.all((req, res, next) => {
+    // Insidee we are gonna handle the incoming request
+    // When a request comes in, no matter which method is invoke
+    // This code will be executed first
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    
+    // Call next
+    // What it means is that it will continue on
+    // Passing it to the next  "app.get"
+    next();
+})
+// Will receive next() / Get Request
+.get((req, res, next) => {
+    res.end('Will send details of the dish:'
+        + req.params.dishId + ' to you!'); // dishID should match params in /dishes/:dishId
+})
 
-// // Post Request
-// app.post('/dishes/:dishId', (req, res, next) => {
-//     res.end('POST operation not supported on /dishes/'
-//         + req.params.dishId);
-// });
+// Post Request
+.post((req, res, next) => {
+    res.statusCode = 403; // 403 Forbidden
+    res.end('POST operation not supported on /dishes/'
+        + req.params.dishId);
+})
 
-// // Put Request
-// // When you do a put you are sending back the info
-// // of which dishId you are updating.
-// app.put('/dishes/:dishId', (req, res, next) => {
-//     res.write('Updating the dish: '
-//         + req.params.dishId + '\n');
-//     // Notice we use req.body instead of req.params - Because 
-//     // we can access json strings that contains the details 
-//     // because we are using the body parser.
-//     res.end('Will update the dish: ' + req.body.name
-//         + ' with details: ' + req.body.description)
-// });
+// Put Request
+// When you do a put you are sending back the info
+// of which dishId you are updating.
+.put((req, res, next) => {
+    res.write('Updating the dish: '
+        + req.params.dishId + '\n');
+    // Notice we use req.body instead of req.params - Because 
+    // we can access json strings that contains the details 
+    // because we are using the body parser.
+    res.end('Will update the dish: ' + req.body.name
+        + ' with details: ' + req.body.description)
+})
 
-// // Delete  Request
-// app.delete('/dishes/:dishId', (req, res, next) => {
-//     res.end('Deleting dish: ' + req.params.dishId);
-// });
+// Delete  Request
+.delete((req, res, next) => {
+    res.end('Deleting dish: ' + req.params.dishId);
+});
 
-//---------- END ----------
+//---------- END ----------/
 
 // Export
 module.exports = dishRouter;
