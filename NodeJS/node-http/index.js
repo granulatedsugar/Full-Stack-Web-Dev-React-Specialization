@@ -12,7 +12,8 @@ const server = http.createServer((req, res) => {
 
     if (req.method == 'GET')  { // GET request method
         var fileUrl; 
-        // Examine the URL that comes in | If you just request localhost:3000 it will default to index.html
+        // Examine the URL that comes in | 
+        // If you just request localhost:3000 it will default to index.html
         if (req.url == '/') fileUrl = '/index.html';
         // Otherwise file URL will be equal to request URL
         else fileUrl = req.url;
