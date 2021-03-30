@@ -4,7 +4,7 @@
 */
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-
+const dboper = require('./operations');
 
 const url = 'mongodb://localhost:27017/'; // URL where mongo can be accessed:port
 const dbname = 'conFusion'; // Database name
@@ -17,31 +17,28 @@ MongoClient.connect(url, (err, client) => {
     console.log('Connected correctly to server');
 
     const db = client.db(dbname); // To connect to Database
-    const collection = db.collection('dishes'); // Access dishes table
 
-    // We will try to insert one object.
-    // First argument is the data and second is a callback function  that takes two params
-    collection.insertOne({ "one": "Uthapizza", "description": "test"}, (err, result) => { 
-        
-        assert.equal(err, null); // Assertion, check to make sure that error is not null
+    dboper.insertDocument(db, { name: "Vadonut", description:  "Test"}, 'dishes', (result) => {
 
-        console.log('After insert: \n'); // After we insert then 
-        console.log('result.ops');  // We get the result value, this result will provide OPS property
-        
-        // We supply an empty js object, so it will search for 
-        // everything in the collection and return to us
-        collection.find({}).toArray((err, docs) => { 
+        console.log(`Insert Document:\n`, result.ops);
 
-            assert.equal(err, null);
+        dboper.findDocuments(db, 'dishes', (docs) => {
+   
+            console.log(`Found Documents:\n`, docs);
 
-            console.log('Found\n');
-            console.log(docs); // All Documents[Row] in the collection will be returned.
+            dboper.updateDocument(db, { name: "Vadonut" }, { description: "Updated Test" }, "dishes", (result) => {
+                
+                console.log("Updated Document:\n", result.result);
 
-            db.dropCollection('dishes', (err, result) => {
+                dboper.findDocuments(db, 'dishes', (docs) => {
+                    console.log(`Found Documents:\n`, docs);
 
-                assert.equal(err, null);
+                    db.dropCollection('dishes', (result) => {
+                        console.log(`Dropped  Collection:`, result);
 
-                client.close(); // Close connection the database
+                        client.close();
+                    });
+                });
             });
         });
     });

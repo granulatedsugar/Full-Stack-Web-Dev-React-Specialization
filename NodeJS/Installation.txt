@@ -11,3 +11,4 @@ mongo
 // NODE MongoDB Driver (To connect node and mongo)
 // Install
 npm install mongodb --save
+npm install assert --save
