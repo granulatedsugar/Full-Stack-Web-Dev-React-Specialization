@@ -1,0 +1,13 @@
+Install MongoDB from website
+
+
+// Must be two terminals
+Initiate MongoDB in Terminal
+mongod --dbpath=data --bind_ip 127.0.0.1
+
+Start MongoDB in Terminal
+mongo
+
+// NODE MongoDB Driver (To connect node and mongo)
+// Install
+npm install mongodb --save
