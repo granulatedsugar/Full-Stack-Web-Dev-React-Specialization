@@ -6,6 +6,25 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const commentSchema = new Schema({
+    rating: {
+        type:  Number, // Schema type
+        min:  1, // Minimum value
+        max: 5, // Max value
+        required:  true // Required field
+    },
+    comment: {
+        type: String,
+        required: true
+    },
+    author: {
+        type: String,
+        required: true
+    }
+},{
+    timestamps: true
+});
+
 // Create schema
 const dishSchema = new Schema({
 
@@ -18,7 +37,8 @@ const dishSchema = new Schema({
     description: {
         type: String,
         required: true
-    }
+    },
+    comments: [ commentSchema ] // Subdocument! Usage of subdocument in mongoose!
 },{
     timestamps: true // Add timestamp to each document
 });
