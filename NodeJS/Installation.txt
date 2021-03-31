@@ -12,3 +12,7 @@ mongo
 // Install
 npm install mongodb --save
 npm install assert --save
+
+
+// Mongoose
+npm intall mongoose --save
