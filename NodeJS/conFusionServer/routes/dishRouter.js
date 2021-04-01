@@ -9,6 +9,10 @@ const express = require('express');
 // To use an express router
 const dishRouter = express.Router();
 
+// Mongoose - to interact
+const mongoose = require('mongoose');
+const Dishes = require('../models/dishes'); // Model
+
 // dishRouter.use(bodyParser.json()); // Deprecated
 // Using latest json parser
 dishRouter.use(express.json());
@@ -23,29 +27,34 @@ dishRouter.route('/')
 
 
 // first parameter is the endpoint, second is the callback function
-.all((req, res, next) => {
-    // Insidee we are gonna handle the incoming request
-    // When a request comes in, no matter which method is invoke
-    // This code will be executed first
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    
-    // Call next
-    // What it means is that it will continue on
-    // Passing it to the next  "app.get"
-    next();
-})
-
-// Will receive next() / Get Request
+// Get Request
 .get((req, res, next) => {
-    res.end('Will send all the dishes to you!');
+    // Expecting all to be returned in response to GET request
+    // From express server we are accessing the database
+    Dishes.find({})
+    // Promise Start
+    .then((dish) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(dish); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 })
 
 // Post Request
 .post((req, res, next) => {
-    // JSON will be parse as a JS Object
-    res.end('Will add the dish: ' + req.body.name + 
-        ' with  details: ' + req.body.description);
+    // Create dishes
+    Dishes.create(req.body)
+    // Promise Start
+    .then((dish) => {
+        console.log('Dish Created ', dish); // Repond Dish Created + whatever dish
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(dish); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 })
 
 // Put Request
@@ -58,34 +67,42 @@ dishRouter.route('/')
 // Delete  Request
 // Delete will have the semi colon.
 .delete((req, res, next) => {
-    res.end('Deleting all the dishes!');
+    // DANGEROUS OPERATION!!!
+    Dishes.remove({})
+    // Promise Start
+    .then((resp) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(resp); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 });
 
 //----- Setup to support /dishes/:dishID
 
 // Assignment 1 - Update dishRouter for dishId
 // No semi colon for dishRouter.route()
+// Notice we use req.body instead of req.params - Because 
+// we can access json strings that contains the details 
+// because we are using the body parser.
 dishRouter.route('/:dishId')
-
-.all((req, res, next) => {
-    // Insidee we are gonna handle the incoming request
-    // When a request comes in, no matter which method is invoke
-    // This code will be executed first
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    
-    // Call next
-    // What it means is that it will continue on
-    // Passing it to the next  "app.get"
-    next();
-})
 // Will receive next() / Get Request
 .get((req, res, next) => {
-    res.end('Will send details of the dish:'
-        + req.params.dishId + ' to you!'); // dishID should match params in /dishes/:dishId
+    Dishes.findById(req.params.dishId)
+    // Promise Start
+    .then((dish) => {
+        console.log('Dish Created ', dish); // Repond Dish Created + whatever dish
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(dish); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 })
 
 // Post Request
+// Mongoose methods: findBy
 .post((req, res, next) => {
     res.statusCode = 403; // 403 Forbidden
     res.end('POST operation not supported on /dishes/'
@@ -96,18 +113,30 @@ dishRouter.route('/:dishId')
 // When you do a put you are sending back the info
 // of which dishId you are updating.
 .put((req, res, next) => {
-    res.write('Updating the dish: '
-        + req.params.dishId + '\n');
-    // Notice we use req.body instead of req.params - Because 
-    // we can access json strings that contains the details 
-    // because we are using the body parser.
-    res.end('Will update the dish: ' + req.body.name
-        + ' with details: ' + req.body.description)
+    // Identified by dish ID
+    Dishes.findByIdAndUpdate(req.params.dishId, {
+        $set: req.body
+    }, { new: true}) // Return updated Dish.
+    .then((dish) => {
+        console.log('Dish Created ', dish); // Repond Dish Created + whatever dish
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(dish); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 })
 
 // Delete  Request
 .delete((req, res, next) => {
-    res.end('Deleting dish: ' + req.params.dishId);
+    Dishes.findByIdAndRemove(req.params.dishId)
+    .then((resp) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(resp); // JSON response 
+    }, (err) => next(err)) // If error exists here
+    // Promise End
+    .catch((err) => next(err)) // Error will be passed here
 });
 
 //---------- END ----------/

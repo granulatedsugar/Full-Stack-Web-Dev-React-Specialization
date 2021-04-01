@@ -16,3 +16,4 @@ npm install assert --save
 
 // Mongoose
 npm intall mongoose --save
+npm install mongoose-currency --save
