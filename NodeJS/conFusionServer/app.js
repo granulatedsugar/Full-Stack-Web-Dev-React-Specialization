@@ -12,7 +12,7 @@ var leaderRouter = require('./routes/leaderRouter');
 
 
 // --------- MONGOOSE START ---------- //
-// Connection to backend server
+// Connection to MongoDB server
 const mongoose = require('mongoose');
 
 // Models
