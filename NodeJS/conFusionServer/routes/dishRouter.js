@@ -13,6 +13,7 @@ const dishRouter = express.Router();
 const mongoose = require('mongoose');
 const Dishes = require('../models/dishes'); // Model
 
+// Parser
 // dishRouter.use(bodyParser.json()); // Deprecated
 // Using latest json parser
 dishRouter.use(express.json());
@@ -27,8 +28,6 @@ dishRouter.use(express.json());
 // get, post, put, delete method.
 dishRouter.route('/')
 
-
-// first parameter is the endpoint, second is the callback function
 // Get Request
 .get((req, res, next) => {
     // Expecting all to be returned in response to GET request
@@ -39,7 +38,7 @@ dishRouter.route('/')
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(dishes); // JSON response 
-    }, (err) => next(err)) // If error exists here
+    }, (err) => next(err)) // If error exists here pass to catch
     // Promise End
     .catch((err) => next(err)) // Error will be passed here
 })
@@ -89,12 +88,12 @@ dishRouter.route('/')
 // we can access json strings that contains the details 
 // because we are using the body parser.
 dishRouter.route('/:dishId')
-// Will receive next() / Get Request
+
+// Get Request
 .get((req, res, next) => {
     Dishes.findById(req.params.dishId)
     // Promise Start
     .then((dish) => {
-        console.log('Dish Created ', dish); // Repond Dish Created + whatever dish
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(dish); // JSON response 
@@ -120,7 +119,6 @@ dishRouter.route('/:dishId')
         $set: req.body
     }, { new: true}) // Return updated Dish.
     .then((dish) => {
-        console.log('Dish Created ', dish); // Repond Dish Created + whatever dish
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(dish); // JSON response 
@@ -261,7 +259,7 @@ dishRouter.route('/:dishId/comments/:commentId')
         // where either the dish doesnt exist or comments
         // 3 conditions required
         // Only then we can send a comment
-        if (dish != null && dish.comments.id(req.params.commentId) != null ) { // If dish is NOT NULL
+        if (dish != null && dish.comments.id(req.params.commentId) != null ) { // If dish is NOT NULL and commentId is not null
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             // If condition is met, then return comment

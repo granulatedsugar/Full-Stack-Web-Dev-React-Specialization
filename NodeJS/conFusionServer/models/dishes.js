@@ -48,20 +48,20 @@ const dishSchema = new Schema({
     },
     image: {
         type: String,
-        required: true,
+        required: true
     },
     category: {
         type: String,
-        required: true,
+        required: true
     },
     label: {
         type: String,
-        default: '', // Default value empty
+        default: '' // Default empty as it is not required by all items
     },
     price: {
         type: Currency, // Declared  -> mongoose-currency
         required: true,
-        min: 0,
+        min: 0
     },
     featured: {
         type: Boolean,
