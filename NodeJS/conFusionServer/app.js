@@ -30,6 +30,8 @@ connect.then((db) => {
 
 var app = express();
 
+
+// MIDDLEWARES
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -38,6 +40,43 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// --------- BASIC AUTHENTICATION START ---------- //
+function auth(req, res, next) {
+  console.log(req.headers);
+
+  // Get authorization hearder
+  var authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    var err = new Error('You are not authenticated!');
+
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401; // Unauthorized
+    return next(err);
+  }
+  // Extract auth header (User and password)
+  // Two splits
+  var auth = new Buffer(authHeader.split(' ')[1], 'base64').toString().split(':');
+
+  // For clarity
+  var username = auth[0];
+  var password = auth[1];
+
+
+  if (username === 'admin' && password ===  'password') {
+    next(); // Authorized
+  }
+  else { // IF wrong input of user or pass
+    var err = new Error('You are not authenticated!');
+
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401; // Unauthorized
+    return next(err);
+  }
+}
+// --------- BASIC AUTHENTICATION END ---------- //
+
+app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
