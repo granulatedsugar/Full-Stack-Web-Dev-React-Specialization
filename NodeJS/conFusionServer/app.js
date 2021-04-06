@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -39,16 +41,24 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser('12345-67890-09876-54321')); // Signed cookie
+// app.use(cookieParser('12345-67890-09876-54321')); // Signed cookie
+
+app.use(session({
+  name: 'session-id',
+  secret: '12345-67890-09876-54321',
+  saveUninitialized: false,
+  resave: false,
+  store: new FileStore()
+}));
 
 // --------- BASIC AUTHENTICATION START ---------- //
 function auth(req, res, next) {
-  console.log(req.signedCookies);
+  console.log(req.session);
 
 
   // *If the incoming request user or signed cookie
   // *does not exists
-  if (!req.signedCookies.user) {
+  if (!req.session.user) {
     // *We expect basic authorization to be done
     // Get authorization hearder
     var authHeader = req.headers.authorization;
@@ -73,8 +83,8 @@ function auth(req, res, next) {
       // *If the authorization is successful
       // *then cookie will be setup here
       // Check cookie  user
-      res.cookie('user', 'admin', { signed: true })
-      next();
+      req.session.user = 'admin';
+      next(); // Authorized
     }
     else { // IF wrong input of user or pass
       var err = new Error('You are not authenticated!');
@@ -88,8 +98,9 @@ function auth(req, res, next) {
   else {
     // *Then all subsequent cookie carried
     // *Will be checked here
-    if (req.signedCookies.user === 'admin') {
-      next();//  Authorized
+    if (req.session.user === 'admin') {
+      console.log('req.session: ',req.session);
+      next(); // Authorized
     }
     else {
       var err = new Error('You are not authenticated!');
