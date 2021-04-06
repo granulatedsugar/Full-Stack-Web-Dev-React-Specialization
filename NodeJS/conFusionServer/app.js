@@ -51,72 +51,42 @@ app.use(session({
   store: new FileStore()
 }));
 
-// --------- BASIC AUTHENTICATION START ---------- //
+// Moved here before authenticated
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// --------- AUTHENTICATION START ---------- //
 function auth(req, res, next) {
   console.log(req.session);
-
 
   // *If the incoming request user or signed cookie
   // *does not exists
   if (!req.session.user) {
-    // *We expect basic authorization to be done
-    // Get authorization hearder
-    var authHeader = req.headers.authorization;
-
-    if (!authHeader) {
       var err = new Error('You are not authenticated!');
-
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401; // Unauthorized
+      err.status = 403; // Unauthorized
       return next(err);
-    }
-    // Extract auth header (User and password)
-    // Two splits
-    var auth = new Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-
-    // For clarity
-    var username = auth[0];
-    var password = auth[1];
-
-
-    if (username === 'admin' && password ===  'password') {
-      // *If the authorization is successful
-      // *then cookie will be setup here
-      // Check cookie  user
-      req.session.user = 'admin';
-      next(); // Authorized
-    }
-    else { // IF wrong input of user or pass
-      var err = new Error('You are not authenticated!');
-
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401; // Unauthorized
-      return next(err);
-    } 
   }
   // Signed cookie exists
   else {
     // *Then all subsequent cookie carried
     // *Will be checked here
-    if (req.session.user === 'admin') {
+    if (req.session.user === 'authenticated') {
       console.log('req.session: ',req.session);
       next(); // Authorized
     }
     else {
       var err = new Error('You are not authenticated!');
 
-      err.status = 401; // Unauthorized
+      err.status = 403; // Unauthorized
       return next(err);
     }
   }
 }
-// --------- BASIC AUTHENTICATION END ---------- //
+// --------- AUTHENTICATION END ---------- //
 
 app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/dishes', dishRouter);
 app.use('/promotions', promoRouter);
 app.use('/leaders', leaderRouter);
