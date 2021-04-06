@@ -17,3 +17,10 @@ npm install assert --save
 // Mongoose
 npm intall mongoose --save
 npm install mongoose-currency --save
+
+
+Node Library
+npm install express
+
+To log  express
+npm install morgan
