@@ -24,3 +24,10 @@ npm install express
 
 To log  express
 npm install morgan
+
+// Passport - Nodejs Middleware makes authentication easier
+npm install passport --save
+npm install passport-local --save 
+// To simplify building username and password
+/ Adds username, hash and salt field to store username
+npm install passport-local-mongoose --save
