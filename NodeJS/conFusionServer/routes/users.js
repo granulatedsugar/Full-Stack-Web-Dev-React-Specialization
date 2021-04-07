@@ -2,7 +2,8 @@ var express = require('express');
 const bodyParser = require('body-parser'); // Deprecated
 var User = require('../models/user');
 var router = express.Router();
-var  passport = require('passport');
+var passport = require('passport');
+var authenticate = require('../authenticate');
 
 // router.use(bodyParser.json()); // Deprecated
 router.use(express.json());
@@ -50,16 +51,22 @@ router.post('/signup', (req, res, next) => {
 // 1. When we reach the first endpoint "/login"
 // 2. We will first call passport authenticate
 // 3. If successful we will go to (req, res)
-router.post('/login', passport.authenticate('local'), (req, res, next) => {
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  // Issue a TOKEN (jsonwebtoken)
+  // Keep the jsonwebtoken small!
+  // Token will be created and sent back
+  var token = authenticate.getToken({_id: req.user._id});
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
-  res.json({success: true, status: 'You are successfuly logged in!'});
+  res.json({success: true, token: token, status: 'You are successfuly logged in!'});
 });
 // --------------------------------------------- //
 // ---------- USER LOGIN END ------------------- //
 // --------------------------------------------- //
 
-// Logging out
+// --------------------------------------------- //
+// ---------- USER LOGOUT START ---------------- //
+// --------------------------------------------- //
 router.get('/logout', (req, res, next) => {
   if (req.session) {
     req.session.destroy(); // Session is destroyed and info is removed from Server side.
@@ -73,5 +80,8 @@ router.get('/logout', (req, res, next) => {
     next(err);
   }
 });
+// --------------------------------------------- //
+// ---------- USER LOGOUT END ------------------ //
+// --------------------------------------------- //
 
 module.exports = router;

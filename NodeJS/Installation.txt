@@ -31,3 +31,11 @@ npm install passport-local --save
 // To simplify building username and password
 / Adds username, hash and salt field to store username
 npm install passport-local-mongoose --save
+
+// Token based authentication is better for server
+// Session based works fine for web apps and can easily take care of user authentication
+// BUT Session base auth violates the principles of stateless servers and leads to scalability problems
+// mobile apps do not handle session base auth very well.
+// Token base auth helps deal with CORS or CSRF problems
+npm install jsonwebtoken --save
+npm install passport-jwt --save // Authenticate RESTful endpoint using  JWT without needing sessions
