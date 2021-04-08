@@ -9,7 +9,7 @@ import { FadeTransform } from 'react-animation-components';
 //but leader have designation and abbr
 //function component will be used here only
 //extract item from props immediately available in {}
-function RenderCard({item, isLoading, errMess}) {
+const RenderCard = ({item, isLoading, errMess}) => {
     if (isLoading) {
         return(
             <Loading />
@@ -41,7 +41,7 @@ function RenderCard({item, isLoading, errMess}) {
 
 
 //the home receives the props.dish, props.promotion, props.leader will become available here
-function Home(props) {
+const Home = (props) => {
     // Featured products
     return(
         <div className="container">
