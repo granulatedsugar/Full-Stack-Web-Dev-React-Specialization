@@ -52,7 +52,20 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts, (jwt_payload, done) => 
 
 // Verify incoming user
 // means we are not creating sessions since we are using token base
-exports.verifyUser = passport.authenticate('jwt', {session: false}) 
+// Normal User
+exports.verifyUser = passport.authenticate("jwt", { session: false });
+
+// Admin User Verification
+exports.verifyAdmin = (req, res, next) => {
+    if (req.user.admin) {
+        next();
+    }
+    else {
+        var err = new Error('You are not authorized to perform this operation!');
+        err.status = 403;
+        return next(err);
+    }
+};
 // --------------------------------------------------- //
 // ---------- TOKEN BASED AUTH END ------------------- //
 // --------------------------------------------------- //
