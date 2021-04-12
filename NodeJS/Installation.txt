@@ -39,3 +39,9 @@ npm install passport-local-mongoose --save
 // Token base auth helps deal with CORS or CSRF problems
 npm install jsonwebtoken --save
 npm install passport-jwt --save // Authenticate RESTful endpoint using  JWT without needing sessions
+
+// Generating OpenSSl key
+cd bin
+openssl genrsa 1024 > private.key
+openssl req -new -key private.key -out cert.csr
+openssl x509 -req -in cert.csr -signkey private.ket -out - certificate.pem

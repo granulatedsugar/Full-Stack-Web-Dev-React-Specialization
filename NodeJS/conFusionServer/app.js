@@ -36,6 +36,18 @@ connect.then((db) => {
 
 var app = express();
 
+// For all requrest coming in, re-direct to
+app.all('*', (req, res,  next) => {
+  if (req.secure) {
+    // If coming from a secure port proceed next
+    return next();
+  }
+  //Otherwise redicrect secure port
+  else {
+    res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
+  }
+});
+
 
 // MIDDLEWARES
 // view engine setup
