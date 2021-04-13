@@ -4,13 +4,14 @@ var User = require('../models/user');
 var router = express.Router();
 var passport = require('passport');
 var authenticate = require('../authenticate');
+var cors = require('./cors')
 
 // router.use(bodyParser.json()); // Deprecated
 router.use(express.json());
 
 
 /* GET users listing. */
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
   User.find({})
   .then((users) => {
     res.statusCode = 200;
@@ -23,7 +24,7 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, ne
 // --------------------------------------------- //
 // ---------- USER REGISTRATION START ---------- //
 // --------------------------------------------- //
-router.post('/signup', (req, res, next) => {
+router.post('/signup', cors.corsWithOptions, (req, res, next) => {
   // Expectation user and pass is provided
   // in json format
   // check for duplicate
@@ -70,7 +71,7 @@ router.post('/signup', (req, res, next) => {
 // 1. When we reach the first endpoint "/login"
 // 2. We will first call passport authenticate
 // 3. If successful we will go to (req, res)
-router.post('/login', passport.authenticate('local'), (req, res) => {
+router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req, res) => {
   // Issue a TOKEN (jsonwebtoken)
   // Keep the jsonwebtoken small!
   // Token will be created and sent back

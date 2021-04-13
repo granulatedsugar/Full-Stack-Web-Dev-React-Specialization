@@ -12,6 +12,7 @@ const dishRouter = express.Router();
 // Mongoose - to interact
 const mongoose = require('mongoose');
 const authenticate = require('../authenticate'); // Authentication
+const cors = require('./cors');
 const Dishes = require('../models/dishes'); // Model
 
 // Parser
@@ -29,8 +30,10 @@ dishRouter.use(express.json());
 // get, post, put, delete method.
 dishRouter.route('/')
 
+// Pre-flight
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // Get Request
-.get((req, res, next) => {
+.get(cors.cors, (req, res, next) => {
     // Expecting all to be returned in response to GET request
     // From express server we are accessing the database
     Dishes.find({})
@@ -52,7 +55,7 @@ dishRouter.route('/')
 // 1.  authenticate verify user first
 // 2. if successful continue
 // ** if failes passport authenticate will handle
-.post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     // Create dishes
     Dishes.create(req.body)
     // Promise Start
@@ -67,7 +70,7 @@ dishRouter.route('/')
 })
 
 // Put Request
-.put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     // JSON will be parse as a JS Object
     res.statusCode = 403; // Use Code 403 - not supported
     res.end('PUT operation not supported on /dishes');
@@ -75,7 +78,7 @@ dishRouter.route('/')
 
 // Delete  Request
 // Delete will have the semi colon.
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     // DANGEROUS OPERATION!!!
     Dishes.remove({})
     // Promise Start
@@ -97,8 +100,10 @@ dishRouter.route('/')
 // because we are using the body parser.
 dishRouter.route('/:dishId')
 
+// Pre-flight
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // Get Request
-.get((req, res, next) => {
+.get(cors.cors, (req, res, next) => {
     Dishes.findById(req.params.dishId)
     .populate('comments.author')
     // Promise Start
@@ -113,7 +118,7 @@ dishRouter.route('/:dishId')
 
 // Post Request
 // Mongoose methods: findBy
-.post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     res.statusCode = 403; // 403 Forbidden
     res.end('POST operation not supported on /dishes/'
         + req.params.dishId);
@@ -122,7 +127,7 @@ dishRouter.route('/:dishId')
 // Put Request
 // When you do a put you are sending back the info
 // of which dishId you are updating.
-.put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     // Identified by dish ID
     Dishes.findByIdAndUpdate(req.params.dishId, {
         $set: req.body
@@ -137,7 +142,7 @@ dishRouter.route('/:dishId')
 })
 
 // Delete  Request
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Dishes.findByIdAndRemove(req.params.dishId)
     .then((resp) => {
         res.statusCode = 200;
@@ -161,10 +166,11 @@ dishRouter.route('/:dishId')
 // get, post, put, delete method.
 dishRouter.route('/:dishId/comments')
 
-
+// Pre-flight
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // first parameter is the endpoint, second is the callback function
 // Get Request
-.get((req, res, next) => {
+.get(cors.cors, (req, res, next) => {
     // Expecting all to be returned in response to GET request
     // From express server we are accessing the database
     Dishes.findById(req.params.dishId) // Return a specific dish
@@ -187,7 +193,7 @@ dishRouter.route('/:dishId/comments')
 })
 
 // Post Request
-.post(authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     // Create dishes
     Dishes.findById(req.params.dishId)
     // Promise Start
@@ -218,7 +224,7 @@ dishRouter.route('/:dishId/comments')
 })
 
 // Put Request
-.put(authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     // JSON will be parse as a JS Object
     res.statusCode = 403; // Use Code 403 - not supported
     res.end('PUT operation not supported on /dishes '
@@ -227,7 +233,7 @@ dishRouter.route('/:dishId/comments')
 
 // Delete  Request
 // Delete will have the semi colon.
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     // DANGEROUS OPERATION!!!
     Dishes.findById(req.params.dishId)
     // Promise Start
@@ -264,8 +270,11 @@ dishRouter.route('/:dishId/comments')
 // we can access json strings that contains the details 
 // because we are using the body parser.
 dishRouter.route('/:dishId/comments/:commentId')
+
+// Pre-flight
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 // Will receive next() / Get Request
-.get((req, res, next) => {
+.get(cors.cors, (req, res, next) => {
     // We will start locating the dish
     Dishes.findById(req.params.dishId)
     .populate('comments.author')
@@ -302,7 +311,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 
 // Post Request
 // Mongoose methods: findBy
-.post(authenticate.verifyUser, (req, res, next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403; // 403 Forbidden
     res.end('POST operation not supported on /dishes/'
         + req.params.dishId +'/comments/' + req.params.commentId);
@@ -311,7 +320,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 // Put Request
 // When you do a put you are sending back the info
 // of which dishId you are updating.
-.put(authenticate.verifyUser, (req, res, next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     // We will start locating the dish
     Dishes.findById(req.params.dishId)
     // Promise Start
@@ -365,7 +374,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 })
 
 // Delete  Request
-.delete(authenticate.verifyUser, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
      // DANGEROUS OPERATION!!!
      Dishes.findById(req.params.dishId)
      // Promise Start
