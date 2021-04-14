@@ -36,7 +36,7 @@ leaderRouter.route('/')
 .get(cors.cors, (req, res, next) => {
     // Expecting all to be returned in response to GET request
     // From express server we are accessing the database
-    Leaders.find({})
+    Leaders.find(req.query)
     // Promise Start
     .then((leaders) => {
         res.statusCode = 200; // 200 OK

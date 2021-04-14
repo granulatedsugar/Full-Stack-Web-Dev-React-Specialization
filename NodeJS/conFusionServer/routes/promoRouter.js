@@ -33,7 +33,7 @@ promoRouter.route('/')
 // Get Request
 .get(cors.cors, (req, res, next) => {
     // Get all promotions
-    Promotions.find({})
+    Promotions.find(req.query)
     // Promise Start
     .then((promotions) => {
         res.statusCode = 200; // 200 OK!
