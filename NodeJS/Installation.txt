@@ -52,3 +52,6 @@ npm install multer --save
 
 // CORS NodeModule Middleware to configure CORS
 npm install cors --save
+
+// Passport-Facebook-Token-Module
+npm install passport-facebook-token --save

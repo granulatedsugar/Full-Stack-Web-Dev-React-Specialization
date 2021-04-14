@@ -14,6 +14,7 @@ var User = new Schema({
         type: String,
         default: ''
     },
+    facebookId: String,
     admin: { // If want to  assign as Admin user
         type: Boolean,
         default: false
